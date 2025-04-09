@@ -3,7 +3,7 @@ import Signin from "../screen/Signin";
 import Signup from "../screen/Signup";
 export default function Navbar() {
   return (
-    <div className="flex items-center justify-between bg-gray-800 px-5 py-5">
+    <div className="flex items-center justify-between bg-gray-800 h-24 px-5">
       <div className="left">
         <h3 className="text-lg font-bold text-white">Unimatch</h3>
       </div>
