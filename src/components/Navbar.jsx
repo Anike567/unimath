@@ -21,10 +21,10 @@ export default function Navbar() {
             Home
           </Link>
           <Link to="/signin" className="text-blue-400 hover:underline">
-            Signin
+            Top Colleges
           </Link>
           <Link to="/signup" className="text-blue-400 hover:underline">
-            Signup
+            Top Cources
           </Link>
           <Link to="/about" className="text-blue-400 hover:underline">
             About
@@ -53,14 +53,14 @@ export default function Navbar() {
             className="text-blue-400 hover:underline"
             onClick={toggleMenu}
           >
-            Signin
+            Top Colleges
           </Link>
           <Link
             to="/signup"
             className="text-blue-400 hover:underline"
             onClick={toggleMenu}
           >
-            Signup
+            Top Cources
           </Link>
           <Link
             to="/about"
