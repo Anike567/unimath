@@ -1,26 +1,76 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import Signin from "../screen/Signin";
-import Signup from "../screen/Signup";
+import HamburgerButton from "./HamburgerButton";
+
 export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+
   return (
-    <div className="flex items-center justify-between bg-gray-800 h-24 px-5">
-      <div className="left">
-        <h3 className="text-lg font-bold text-white">Unimatch</h3>
+    <div className="bg-gray-800 px-5">
+      <div className="flex items-center justify-between h-24">
+        <div className="text-white text-lg font-bold">Unimatch</div>
+
+        <div className="sm:hidden">
+          <HamburgerButton onClick={toggleMenu} color="light" />
+        </div>
+
+        <div className="hidden sm:flex gap-6">
+          <Link to="/" className="text-blue-400 hover:underline">
+            Home
+          </Link>
+          <Link to="/signin" className="text-blue-400 hover:underline">
+            Signin
+          </Link>
+          <Link to="/signup" className="text-blue-400 hover:underline">
+            Signup
+          </Link>
+          <Link to="/about" className="text-blue-400 hover:underline">
+            About
+          </Link>
+        </div>
       </div>
-      <div className="right flex gap-4">
-        <Link to="/" className="hover:underline text-blue-600">
-          Home
-        </Link>
-        <Link to="/signin" className="hover:underline text-blue-600">
-          Signin
-        </Link>
-        <Link to="/signup" className="hover:underline text-blue-600">
-          Signup
-        </Link>
-        <Link to="/about" className="hover:underline text-blue-600">
-          About
-        </Link>
-      </div>
+
+      {/* Mobile Menu with animation */}
+      {menuOpen && (
+        <div
+          className={`sm:hidden flex flex-col gap-4 pb-4 transform transition-all duration-3000 ease-in-out ${
+            menuOpen
+              ? "translate-y-0 opacity-100" // Menu open, slide down and fade in
+              : "translate-y-[-100%] opacity-0" // Menu closed, slide up and fade out
+          }`}
+        >
+          <Link
+            to="/"
+            className="text-blue-400 hover:underline"
+            onClick={toggleMenu}
+          >
+            Home
+          </Link>
+          <Link
+            to="/signin"
+            className="text-blue-400 hover:underline"
+            onClick={toggleMenu}
+          >
+            Signin
+          </Link>
+          <Link
+            to="/signup"
+            className="text-blue-400 hover:underline"
+            onClick={toggleMenu}
+          >
+            Signup
+          </Link>
+          <Link
+            to="/about"
+            className="text-blue-400 hover:underline"
+            onClick={toggleMenu}
+          >
+            About
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
