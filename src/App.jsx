@@ -3,8 +3,8 @@ import "./App.css";
 import Layout from "./components/Layout";
 import About from "./components/About";
 import Home from "./screen/Home";
-import Signin from "./screen/Signin";
 import Signup from "./screen/Signup";
+import TopColleges from "./screen/TopColleges";
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/topcolleges" element={<TopColleges />} />
         <Route path="/signup" element={<Signup />} />
       </Route>
     </Routes>

@@ -20,7 +20,7 @@ export default function Navbar() {
           <Link to="/" className="text-blue-400 hover:underline">
             Home
           </Link>
-          <Link to="/signin" className="text-blue-400 hover:underline">
+          <Link to="/topcolleges" className="text-blue-400 hover:underline">
             Top Colleges
           </Link>
           <Link to="/signup" className="text-blue-400 hover:underline">
@@ -49,7 +49,7 @@ export default function Navbar() {
             Home
           </Link>
           <Link
-            to="/signin"
+            to="/topcolleges"
             className="text-blue-400 hover:underline"
             onClick={toggleMenu}
           >
