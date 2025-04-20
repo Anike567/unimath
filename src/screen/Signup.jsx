@@ -22,12 +22,6 @@ export default function SigninForm() {
     <div className="h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex justify-center items-center">
       <div className="w-full max-w-xs">
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <Input
-            id="username"
-            name="username"
-            title="Username"
-            handler={handleChange}
-          />
           <Input id="name" name="name" title="Name" handler={handleChange} />
           <Input
             id="e-mail"

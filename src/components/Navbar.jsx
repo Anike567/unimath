@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import HamburgerButton from "./HamburgerButton";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const { userData } = useContext(AuthContext);
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   return (
@@ -23,12 +24,15 @@ export default function Navbar() {
           <Link to="/topcolleges" className="text-blue-400 hover:underline">
             Top Colleges
           </Link>
-          <Link to="/signup" className="text-blue-400 hover:underline">
-            Top Cources
-          </Link>
+
           <Link to="/about" className="text-blue-400 hover:underline">
             About
           </Link>
+          {userData.isLoggedIn && (
+            <Link to="/dashboard" className="text-blue-400 hover:underline">
+              Dashboard
+            </Link>
+          )}
         </div>
       </div>
 

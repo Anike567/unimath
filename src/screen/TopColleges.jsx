@@ -2,17 +2,45 @@ import { useEffect, useState } from "react";
 import getTopColleges from "../API_CALLS/getTopColleges";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
+import submitEnquiry from "../API_CALLS/submitEnquiry";
 
 export default function TopColleges() {
   const [collegeList, setCollegeList] = useState([]);
   const [isLoaded, setLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [enquiryState, setEnquiryState] = useState({
+    name: "",
+    email: "",
+    contact: "",
+    course: "",
+  });
+
+  const handleSubmit = (college) => {
+    submitEnquiry(college, enquiryState)
+      .then((data) => {
+        if (data.msg === "ok") {
+          alert("Enquiry Submitted Successfully");
+        } else {
+          alert("Some internal error occured try later");
+        }
+      })
+      .catch((err) => {
+        alert("Unable to submit Enquiry please try later");
+      });
+  };
+
+  const handleChange = (e) => {
+    setEnquiryState((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   useEffect(() => {
     getTopColleges()
       .then((data) => {
         setCollegeList(data.college);
+
         setLoaded(true);
       })
       .catch((err) => {
@@ -20,10 +48,6 @@ export default function TopColleges() {
         console.log(err);
       });
   }, []);
-
-  const handleClick = (college) => {
-    setSelectedCollege(college);
-  };
 
   if (hasError) {
     return (
@@ -92,30 +116,80 @@ export default function TopColleges() {
                 <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
                   <Popup
                     trigger={
-                      <button
-                        onClick={() => handleClick(college)}
-                        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-2 sm:py-2 sm:px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-                      >
+                      <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-2 sm:py-2 sm:px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
                         Get Details
                       </button>
                     }
                     modal
                     nested
+                    contentStyle={{
+                      padding: "0px",
+                      border: "none",
+                      width: "auto",
+                    }}
                   >
                     {(close) => (
-                      <div className="p-4 bg-white rounded-lg shadow-lg w-full max-w-md">
+                      <div className="p-4 bg-white rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
                         <h3 className="text-xl font-semibold mb-2">
-                          {selectedCollege?.university_name}
+                          {college.university_name}
                         </h3>
-                        <div>
-                          <input placeholder="your mail" />
+                        <p className="text-gray-700 mb-2">
+                          NIRF Rank: {college.nirf_rank}
+                        </p>
+                        <p className="text-gray-700 mb-2">
+                          Courses Offered: {college.courses_offered}
+                        </p>
+                        <p className="text-gray-700 mb-4">
+                          Fee Range: {college.fee_range}
+                        </p>
+
+                        <input
+                          placeholder="E-mail"
+                          type="email"
+                          className="w-full border border-gray-300 p-2 rounded mb-4"
+                          name="email"
+                          onChange={handleChange}
+                        />
+                        <input
+                          placeholder="Name"
+                          className="w-full border border-gray-300 p-2 rounded mb-4"
+                          type="text"
+                          name="name"
+                          onChange={handleChange}
+                        />
+                        <input
+                          placeholder="Contact no."
+                          className="w-full border border-gray-300 p-2 rounded mb-4"
+                          type="tel"
+                          name="contact"
+                          onChange={handleChange}
+                        />
+
+                        <input
+                          placeholder="Course."
+                          className="w-full border border-gray-300 p-2 rounded mb-4"
+                          type="text"
+                          name="course"
+                          onChange={handleChange}
+                        />
+
+                        <div className="flex justify-between">
+                          <button
+                            onClick={close}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                          >
+                            Close
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              handleSubmit(college);
+                            }}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                          >
+                            Submit
+                          </button>
                         </div>
-                        <button
-                          onClick={close}
-                          className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                        >
-                          Close
-                        </button>
                       </div>
                     )}
                   </Popup>
