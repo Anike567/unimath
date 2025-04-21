@@ -29,7 +29,7 @@ export default function Signin() {
         alert(data.msg);
         if (data.msg === "Logged in successfully") {
           setUserData({ isLoggedIn: true, token: data.authToken });
-          navigate("/dashboard");
+          navigate("/admin");
         }
       })
       .catch((err) => {

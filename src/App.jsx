@@ -5,30 +5,44 @@ import About from "./components/About";
 import Home from "./screen/Home";
 import Signup from "./screen/Signup";
 import TopColleges from "./screen/TopColleges";
-import Dashboard from "./screen/DashBoard";
 import Signin from "./screen/Signin";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import DashboardLayout from "./components/Dashboardlayout.jsx";
+import Enquiries from "./components/Enquiries.jsx";
+import AdminHome from "./components/AdminHome.jsx";
+import Settings from "./components/Setting.jsx";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="topcolleges" element={<TopColleges />} />
-        {/* <Route path="signup" element={<Signup />} /> */}
-        <Route path="/signup" element={<Signup />} />
+    <AuthProvider>
+      <Routes>
+        {/* Public/User Routes - No Login Needed */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="topcolleges" element={<TopColleges />} />
+        </Route>
+
+        {/* Auth Routes - Admin Only */}
         <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Protected Admin Route */}
         <Route
-          path="/dashboard"
+          path="/admin"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <DashboardLayout />
             </ProtectedRoute>
           }
-        ></Route>
-      </Route>
-    </Routes>
+        >
+          <Route path="home" element={<AdminHome />} />
+          <Route path="enquiries" element={<Enquiries />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Routes>
+    </AuthProvider>
   );
 }
 
