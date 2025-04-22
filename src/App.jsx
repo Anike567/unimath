@@ -37,6 +37,7 @@ function App() {
             </ProtectedRoute>
           }
         >
+          <Route index element={<AdminHome />} />
           <Route path="home" element={<AdminHome />} />
           <Route path="enquiries" element={<Enquiries />} />
           <Route path="settings" element={<Settings />} />

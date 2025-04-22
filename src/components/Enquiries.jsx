@@ -1,24 +1,62 @@
 import { useEffect, useState } from "react";
-import getAllEnquiries from "../API_CALLS/getEnquiries";
-import { FiCheckSquare } from "react-icons/fi";
-import { MdCancel } from "react-icons/md";
+import { FaRegSquare, FaRegCheckSquare } from "react-icons/fa";
+import {
+  getAllEnquiries,
+  markResolved,
+  markUnResolved,
+  getResolved,
+  getUnResolved,
+} from "../API_CALLS/getEnquiries";
 
 export default function Enquiries() {
+  const [reload, setReload] = useState(false);
   const [isLoaded, setLoaded] = useState(false);
   const [hasError, setError] = useState(false);
   const [enquiryList, setEnquiryList] = useState([]);
+  const [filter, setFilter] = useState("all"); // selected option
 
-  useEffect(() => {
-    getAllEnquiries()
+  const fetchData = (selectedOption) => {
+    setLoaded(false); // loading starts
+
+    let apiCall;
+    switch (selectedOption) {
+      case "resolved":
+        apiCall = getResolved;
+        break;
+      case "unresolved":
+        apiCall = getUnResolved;
+        break;
+      default:
+        apiCall = getAllEnquiries;
+    }
+
+    apiCall()
       .then((data) => {
-        setEnquiryList(data);
-        setLoaded(true); // Set loaded to true after data is fetched
+        setEnquiryList(data?.data || data);
+        setLoaded(true);
+        setError(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setError(true);
       });
-  }, []);
+  };
+
+  const handleMarkResolved = (enquiry) => {
+    markResolved(enquiry._id)
+      .then(() => setReload((prev) => !prev))
+      .catch(console.log);
+  };
+
+  const handleMarkUnResolved = (enquiry) => {
+    markUnResolved(enquiry._id)
+      .then(() => setReload((prev) => !prev))
+      .catch(console.log);
+  };
+
+  useEffect(() => {
+    fetchData(filter);
+  }, [reload, filter]);
 
   if (!isLoaded && !hasError) {
     return (
@@ -40,68 +78,91 @@ export default function Enquiries() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Enquiry Page</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-800 shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-gray-100">
-            <tr>
-              {[
-                "Name",
-                "Email",
-                "Contact No",
-                "Course",
-                "University Name",
-                "Fee Range",
-                "Resolved",
-              ].map((heading, idx) => (
-                <th
-                  key={idx}
-                  className="text-left px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 font-semibold text-xs sm:text-xl"
-                >
-                  {heading}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {enquiryList.map((enquiry, index) => (
-              <tr
-                key={index}
-                className={
-                  index % 2 === 0
-                    ? "bg-white hover:bg-gray-50"
-                    : "bg-gray-50 hover:bg-gray-100"
-                }
-              >
-                <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
-                  {enquiry?.name || "Seema Yadav"}
-                </td>
-                <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
-                  {enquiry.email}
-                </td>
-                <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
-                  {enquiry.contact}
-                </td>
-                <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
-                  {enquiry.course}
-                </td>
-                <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
-                  {enquiry.university_name}
-                </td>
-                <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
-                  {enquiry.fee_range}
-                </td>
-                <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
-                  {enquiry?.resolved ? (
-                    <FiCheckSquare className="text-green-600" size={40} />
-                  ) : (
-                    <MdCancel className="text-red-600" size={40} />
-                  )}
-                </td>
+      {/* Fixed Header */}
+      <div className="w-full fixed top-0 left-0 bg-violet-600 text-white z-10 shadow-md px-6 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="text-xl sm:text-2xl font-bold">Enquiry Page</h1>
+          <select
+            className="bg-white text-black rounded-md p-4 shadow-sm"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="resolved">Resolved</option>
+            <option value="unresolved">Unresolved</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Content Below Header */}
+      <div className="mt-28 overflow-x-auto">
+        <div className="border rounded-lg shadow-lg overflow-hidden">
+          <table className="min-w-full bg-white text-sm sm:text-base">
+            <thead className="bg-gray-100">
+              <tr>
+                {[
+                  "Name",
+                  "Email",
+                  "Contact No",
+                  "Course",
+                  "University Name",
+                  "Fee Range",
+                  "Resolved",
+                ].map((heading, idx) => (
+                  <th
+                    key={idx}
+                    className="text-left px-4 py-3 border-b border-gray-300 font-semibold"
+                  >
+                    {heading}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {enquiryList.map((enquiry, index) => (
+                <tr
+                  key={index}
+                  className={
+                    index % 2 === 0
+                      ? "bg-white hover:bg-gray-50"
+                      : "bg-gray-50 hover:bg-gray-100"
+                  }
+                >
+                  <td className="px-4 py-3 border-t">
+                    {enquiry?.name || "Seema Yadav"}
+                  </td>
+                  <td className="px-4 py-3 border-t">{enquiry.email}</td>
+                  <td className="px-4 py-3 border-t">{enquiry.contact}</td>
+                  <td className="px-4 py-3 border-t">{enquiry.course}</td>
+                  <td className="px-4 py-3 border-t">
+                    {enquiry.university_name}
+                  </td>
+                  <td className="px-4 py-3 border-t">{enquiry.fee_range}</td>
+                  <td className="px-4 py-3 border-t">
+                    {enquiry?.resolved ? (
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => handleMarkUnResolved(enquiry)}
+                      >
+                        <FaRegCheckSquare
+                          className="text-green-600"
+                          size={20}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => handleMarkResolved(enquiry)}
+                      >
+                        <FaRegSquare className="text-red-600" size={20} />
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
