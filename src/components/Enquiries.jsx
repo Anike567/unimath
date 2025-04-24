@@ -79,7 +79,7 @@ export default function Enquiries() {
   return (
     <div className="p-6">
       {/* Fixed Header */}
-      <div className="w-full fixed top-0 left-0 bg-violet-600 text-white z-10 shadow-md px-6 py-4">
+      <div className="w-full  bg-violet-600 text-white z-10 shadow-md px-6 py-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-xl sm:text-2xl font-bold">Enquiry Page</h1>
           <select
@@ -95,7 +95,7 @@ export default function Enquiries() {
       </div>
 
       {/* Content Below Header */}
-      <div className="mt-28 overflow-x-auto">
+      <div className="mt-10 overflow-x-auto">
         <div className="border rounded-lg shadow-lg overflow-hidden">
           <table className="min-w-full bg-white text-sm sm:text-base">
             <thead className="bg-gray-100">

@@ -12,6 +12,8 @@ import DashboardLayout from "./components/Dashboardlayout.jsx";
 import Enquiries from "./components/Enquiries.jsx";
 import AdminHome from "./components/AdminHome.jsx";
 import Settings from "./components/Setting.jsx";
+import StudentForm from "./components/StudentForm.jsx";
+import UniversityForm from "./components/UniversityForm.jsx";
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
           <Route path="home" element={<AdminHome />} />
           <Route path="enquiries" element={<Enquiries />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="addstudent" element={<StudentForm />} />
+          <Route path="adduniversity" element={<UniversityForm />} />
         </Route>
       </Routes>
     </AuthProvider>

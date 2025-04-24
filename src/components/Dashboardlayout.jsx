@@ -1,6 +1,9 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FiFileText, FiSettings } from "react-icons/fi";
+import { FaPlus } from "react-icons/fa";
+
+<FaPlus />;
 
 export default function DashboardLayout() {
   return (
@@ -33,15 +36,27 @@ export default function DashboardLayout() {
               Enquiries
             </NavLink>
             <NavLink
-              to="/admin/settings"
+              to="/admin/addstudent"
               className={({ isActive }) =>
                 `flex items-center gap-2 px-4 py-2 rounded-md hover:bg-purple-100 ${
                   isActive ? "bg-purple-200 font-semibold" : ""
                 }`
               }
             >
-              <FiSettings className="w-5 h-5" />
-              Settings
+              <FaPlus className="w-5 h-5" color="green" />
+              Add student
+            </NavLink>
+
+            <NavLink
+              to="/admin/adduniversity"
+              className={({ isActive }) =>
+                `flex items-center gap-2 px-4 py-2 rounded-md hover:bg-purple-100 ${
+                  isActive ? "bg-purple-200 font-semibold" : ""
+                }`
+              }
+            >
+              <FaPlus className="w-5 h-5" color="green" />
+              Add University
             </NavLink>
           </nav>
         </div>
