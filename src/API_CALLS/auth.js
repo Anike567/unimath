@@ -6,7 +6,6 @@ const signin = (body) => {
       .post("/auth/login", body)
       .then((response) => {
         if (response && response.data) {
-          console.log(response.data.msg);
           resolve(response.data);
         } else {
           reject(new Error("No response data found"));

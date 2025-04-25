@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Input from "./Input"; // assuming these are your custom components
+import { saveStudentDetails } from "../API_CALLS/saveDetails";
 
 export default function StudentForm() {
   const [formData, setFormData] = useState({
@@ -13,7 +14,7 @@ export default function StudentForm() {
     doc: "",
     image: null,
   });
-
+  const [hasError, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -30,16 +31,41 @@ export default function StudentForm() {
     });
   };
 
-  const handleSubmit = () => {
-    setIsLoading(true);
+  const handleSubmit = async () => {
+    // setIsLoading(true);
+    const form = new FormData();
+    form.append("email", formData.email);
+    form.append("name", formData.name);
+    form.append("contact", formData.contact);
+    form.append("address", formData.address);
+    form.append("course", formData.course);
+    form.append("doj", formData.doj);
+    form.append("doc", formData.doc);
+    form.append("file", formData.image);
+    form.append("university", formData.university);
 
-    // Simulate async action (replace with API call if needed)
-    setTimeout(() => {
-      console.log("Submitted:", formData);
-      setIsLoading(false);
-    }, 1500);
+    saveStudentDetails(form)
+      .then((data) => {
+        if (data.msg === "done") {
+          alert("Saved Successfully");
+        }
+      })
+
+      .catch((err) => {
+        setError(true);
+        console.log(err);
+      });
   };
 
+  if (hasError) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500">
+          Failed to load data. Please try again later.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="mt-28 overflow-x-auto">
       <div className="border rounded-lg shadow-lg overflow-hidden bg-gray-100 flex items-center justify-center">

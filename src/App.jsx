@@ -14,6 +14,7 @@ import AdminHome from "./components/AdminHome.jsx";
 import Settings from "./components/Setting.jsx";
 import StudentForm from "./components/StudentForm.jsx";
 import UniversityForm from "./components/UniversityForm.jsx";
+import EnrolledStudents from "./components/EnrolledStudents.jsx";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="addstudent" element={<StudentForm />} />
           <Route path="adduniversity" element={<UniversityForm />} />
+          <Route path="studentdetails" element={<EnrolledStudents />} />
         </Route>
       </Routes>
     </AuthProvider>

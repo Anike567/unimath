@@ -58,6 +58,18 @@ export default function DashboardLayout() {
               <FaPlus className="w-5 h-5" color="green" />
               Add University
             </NavLink>
+
+            <NavLink
+              to="/admin/studentdetails"
+              className={({ isActive }) =>
+                `flex items-center gap-2 px-4 py-2 rounded-md hover:bg-purple-100 ${
+                  isActive ? "bg-purple-200 font-semibold" : ""
+                }`
+              }
+            >
+              <FaPlus className="w-5 h-5" color="green" />
+              Enrolled Student
+            </NavLink>
           </nav>
         </div>
 
