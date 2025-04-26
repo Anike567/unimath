@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FiFileText, FiSettings } from "react-icons/fi";
-import { FaPlus } from "react-icons/fa";
+import { FaEye, FaPlus } from "react-icons/fa";
 
 <FaPlus />;
 
@@ -21,7 +21,7 @@ export default function DashboardLayout() {
                 }`
               }
             >
-              <AiOutlineHome className="w-5 h-5" />
+              <AiOutlineHome color="green" className="w-5 h-5" />
               Dashboard
             </NavLink>
             <NavLink
@@ -32,7 +32,7 @@ export default function DashboardLayout() {
                 }`
               }
             >
-              <FiFileText className="w-5 h-5" />
+              <FiFileText color="green" className="w-5 h-5" />
               Enquiries
             </NavLink>
             <NavLink
@@ -67,7 +67,7 @@ export default function DashboardLayout() {
                 }`
               }
             >
-              <FaPlus className="w-5 h-5" color="green" />
+              <FaEye className="w-5 h-5" color="green" />
               Enrolled Student
             </NavLink>
           </nav>
