@@ -1,22 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "./../API_CALLS/api";
+import { AuthContext } from "../context/AuthContext";
 
 export default function EnrolledStudents() {
   const [isLoaded, setLoaded] = useState(false);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const { userData } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const BACKEND_URL = "http://localhost:3000"; // Your backend URL
 
   useEffect(() => {
     api
-      .get("/enquiries/getstudentdetails")
-      .then((data) => {
-        console.log(data.data);
-        setEnrolledStudents(data.data.data);
+      .get("/enquiries/getstudentdetails", {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
+      .then((res) => {
+        setEnrolledStudents(res.data.data);
         setLoaded(true);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.status);
+        // if (err.response && err.response.status === 400) {
+        //   alert("Please log in.");
+        //   navigate("/signin");
+        // } else {
+        //   console.error(err);
+        // }
       });
-  }, []);
+  }, [userData.token, navigate]); // Add dependencies
 
   if (!isLoaded) {
     return (
@@ -28,7 +44,21 @@ export default function EnrolledStudents() {
 
   return (
     <div>
-      <div className="w-full bg-violet-600 text-white z-10 shadow-md px-6 py-4">
+      {/* Modal for viewing full image */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img
+            src={selectedImage}
+            alt="Full View"
+            className="max-w-full max-h-full object-contain"
+          />
+        </div>
+      )}
+
+      <div className="w-full bg-violet-600 text-white shadow-md px-6 py-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-xl sm:text-2xl font-bold">Enrolled Students</h1>
         </div>
@@ -62,9 +92,12 @@ export default function EnrolledStudents() {
                 <td className="p-3">
                   {std.image ? (
                     <img
-                      src={`http://${std.image}`}
+                      src={`${BACKEND_URL}/${std.image}`}
                       alt={std.name}
-                      className="w-16 h-16 object-cover rounded"
+                      className="w-16 h-16 object-cover rounded cursor-pointer"
+                      onClick={() =>
+                        setSelectedImage(`${BACKEND_URL}/${std.image}`)
+                      }
                     />
                   ) : (
                     <span>No Image</span>

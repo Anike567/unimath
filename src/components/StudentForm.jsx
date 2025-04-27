@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Input from "./Input"; // assuming these are your custom components
 import { saveStudentDetails } from "../API_CALLS/saveDetails";
-
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 export default function StudentForm() {
   const [formData, setFormData] = useState({
     email: "",
@@ -16,6 +18,8 @@ export default function StudentForm() {
   });
   const [hasError, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { userData } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({
@@ -44,7 +48,7 @@ export default function StudentForm() {
     form.append("file", formData.image);
     form.append("university", formData.university);
 
-    saveStudentDetails(form)
+    saveStudentDetails(form, userData.token)
       .then((data) => {
         if (data.msg === "done") {
           alert("Saved Successfully");
@@ -52,8 +56,12 @@ export default function StudentForm() {
       })
 
       .catch((err) => {
-        setError(true);
-        console.log(err);
+        console.log(err.code);
+        if (err.code === "ERR_BAD_REQUEST") {
+          navigate("/signin");
+        } else {
+          setError(true);
+        }
       });
   };
 

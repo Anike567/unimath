@@ -15,6 +15,7 @@ import Settings from "./components/Setting.jsx";
 import StudentForm from "./components/StudentForm.jsx";
 import UniversityForm from "./components/UniversityForm.jsx";
 import EnrolledStudents from "./components/EnrolledStudents.jsx";
+import EnrolledUniversities from "./components/EnrolledUniversities.jsx";
 
 function App() {
   return (
@@ -47,6 +48,10 @@ function App() {
           <Route path="addstudent" element={<StudentForm />} />
           <Route path="adduniversity" element={<UniversityForm />} />
           <Route path="studentdetails" element={<EnrolledStudents />} />
+          <Route
+            path="universitiesDetails"
+            element={<EnrolledUniversities />}
+          />
         </Route>
       </Routes>
     </AuthProvider>

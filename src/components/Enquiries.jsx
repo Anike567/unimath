@@ -7,6 +7,8 @@ import {
   getResolved,
   getUnResolved,
 } from "../API_CALLS/getEnquiries";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 export default function Enquiries() {
   const [reload, setReload] = useState(false);
@@ -14,6 +16,8 @@ export default function Enquiries() {
   const [hasError, setError] = useState(false);
   const [enquiryList, setEnquiryList] = useState([]);
   const [filter, setFilter] = useState("all"); // selected option
+
+  const { userData } = useContext(AuthContext);
 
   const fetchData = (selectedOption) => {
     setLoaded(false); // loading starts
@@ -30,7 +34,7 @@ export default function Enquiries() {
         apiCall = getAllEnquiries;
     }
 
-    apiCall()
+    apiCall(userData.token)
       .then((data) => {
         setEnquiryList(data?.data || data);
         setLoaded(true);
@@ -43,13 +47,13 @@ export default function Enquiries() {
   };
 
   const handleMarkResolved = (enquiry) => {
-    markResolved(enquiry._id)
+    markResolved(enquiry._id, userData.token)
       .then(() => setReload((prev) => !prev))
       .catch(console.log);
   };
 
   const handleMarkUnResolved = (enquiry) => {
-    markUnResolved(enquiry._id)
+    markUnResolved(enquiry._id, userData.token)
       .then(() => setReload((prev) => !prev))
       .catch(console.log);
   };

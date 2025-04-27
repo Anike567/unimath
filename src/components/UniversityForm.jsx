@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-import Input from "./Input"; // assuming these are your custom components
-import PasswordField from "./PasswordField";
+import Input from "./Input";
+import saveUniversity from "../API_CALLS/saveUniversityDetail";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
-export default function UniversityForm() {
+export default function CollegeForm() {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    university_name: "",
+    nirf_rank: "",
+    courses_offered: "",
+    fee_range: "",
+    image: null,
   });
-
+  const [hasError, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { userData } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({
@@ -17,133 +23,124 @@ export default function UniversityForm() {
     });
   };
 
-  const handleSubmit = () => {
-    setIsLoading(true);
-    // Simulate async action
-    setTimeout(() => {
-      console.log("Submitted:", formData);
-      setIsLoading(false);
-    }, 1500);
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0],
+    });
   };
 
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    const form = new FormData();
+    form.append("university_name", formData.university_name);
+    form.append("nirf_rank", formData.nirf_rank);
+    form.append("courses_offered", formData.courses_offered);
+    form.append("fee_range", formData.fee_range);
+    form.append("file", formData.image);
+
+    saveUniversity(form, userData.token)
+      .then((data) => {
+        console.log(data);
+        if (data.msg === "saved successfully") {
+          alert("Saved Successfully");
+        }
+      })
+      .catch((err) => {
+        setError(true);
+        console.log(err);
+      })
+      .finally(() => setIsLoading(false));
+  };
+
+  if (hasError) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500">
+          Failed to load data. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      {/* Top Nav */}
-      {/* <div className="w-full fixed top-0 left-0 bg-violet-600 text-white z-10 shadow-md px-6 py-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h1 className="text-xl sm:text-2xl font-bold">Home Page</h1>
-        </div>
-      </div> */}
+    <div className="mt-28 overflow-x-auto">
+      <div className="border rounded-lg shadow-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-[400px]">
+          <div className="grid grid-cols-1 gap-4">
+            <Input
+              title="University Name"
+              name="university_name"
+              id="university_name"
+              handler={handleChange}
+              value={formData.university_name}
+            />
 
-      {/* Form Section */}
-      <div className="mt-28 overflow-x-auto">
-        <div className="border rounded-lg shadow-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-[800px]">
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                title="Name"
-                name="name"
-                id="name"
-                handler={handleChange}
-                value={formData.name}
+            <Input
+              title="NIRF Ranking"
+              name="nirf_rank"
+              id="nirf_rank"
+              handler={handleChange}
+              value={formData.nirf_rank}
+            />
+
+            <Input
+              title="Courses Offered (separated with ,)"
+              name="courses_offered"
+              id="courses_offered"
+              handler={handleChange}
+              value={formData.courses_offered}
+            />
+
+            <Input
+              title="Fee Range"
+              name="fee_range"
+              id="fee_range"
+              handler={handleChange}
+              value={formData.fee_range}
+            />
+
+            <div className="mt-4">
+              <p className="text-gray-700 text-sm font-bold mb-1">Image</p>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className="p-2 border w-full"
               />
-
-              <Input
-                title="Email"
-                name="email"
-                id="email"
-                handler={handleChange}
-                value={formData.email}
-              />
-
-              <Input
-                title="Contact No."
-                name="contact"
-                id="contact"
-                handler={handleChange}
-                value={formData.contact}
-              />
-
-              <Input
-                title="Address"
-                name="address"
-                id="address"
-                handler={handleChange}
-                value={formData.address}
-              />
-
-              <Input
-                title="Course"
-                name="course"
-                id="course"
-                handler={handleChange}
-                value={formData.course}
-              />
-
-              <Input
-                title="University Name"
-                name="university"
-                id="university"
-                handler={handleChange}
-                value={formData.university}
-              />
-
-              <div className="mt-4">
-                <div>
-                  <p className="text-gray-700 text-sm font-bold ">
-                    Date of Joining
-                  </p>
-                </div>
-                <div>
-                  <input type="date" className="p-2 border" />
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <div>
-                  <p className="text-gray-700 text-sm font-bold ">
-                    Date of Completion
-                  </p>
-                </div>
-                <div>
-                  <input type="date" className="p-2 border border-round" />
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <div>
-                  <p className="text-gray-700 text-sm font-bold ">Image</p>
-                </div>
-                <div>
-                  <input type="file" className="p-2 border border-round" />
-                </div>
-              </div>
             </div>
-            {/* Submit Button */}
-            <div className="flex items-center justify-between mt-4">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center w-[100px]"
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSubmit();
-                }}
-              >
-                Save
-              </button>
-              <button
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center w-[100px]"
-                type="reset"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSubmit();
-                }}
-              >
-                Reset
-              </button>
-            </div>
-          </form>
-        </div>
+          </div>
+
+          <div className="flex items-center justify-between mt-4">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-[100px] disabled:opacity-50"
+              type="button"
+              disabled={isLoading}
+              onClick={(e) => {
+                e.preventDefault();
+                handleSubmit();
+              }}
+            >
+              {isLoading ? "Saving..." : "Save"}
+            </button>
+
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-[100px]"
+              type="reset"
+              onClick={(e) => {
+                e.preventDefault();
+                setFormData({
+                  university_name: "",
+                  nirf_rank: "",
+                  courses_offered: "",
+                  fee_range: "",
+                  image: null,
+                });
+              }}
+            >
+              Reset
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

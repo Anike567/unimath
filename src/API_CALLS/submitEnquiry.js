@@ -11,7 +11,7 @@ export default function submitEnquiry(selectedCollege, userInfo) {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await api.post("/college/enquiry", body);
+      const res = await api.post("/user/enquiry", body);
       if (res.data) {
         resolve(res.data);
       } else {

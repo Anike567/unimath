@@ -1,10 +1,17 @@
 import api from "./api";
 
 // Function to get all enquiries
-export const getAllEnquiries = async () => {
+export const getAllEnquiries = async (token) => {
   try {
-    const result = await api.post("/enquiries/getallenquiry");
-    console.log(result);
+    const result = await api.post(
+      "/enquiries/getallenquiry",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (result.data) {
       return result.data.enquiries;
@@ -17,11 +24,14 @@ export const getAllEnquiries = async () => {
 };
 
 // Function to mark an enquiry as resolved
-export const markResolved = async (id) => {
+export const markResolved = async (id, token) => {
   const body = { id };
   try {
-    const result = await api.patch("/enquiries/markedasresolved", body);
-    console.log(result.data);
+    const result = await api.patch("/enquiries/markedasresolved", body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (result && result.data) {
       return result;
@@ -33,11 +43,14 @@ export const markResolved = async (id) => {
   }
 };
 
-export const markUnResolved = async (id) => {
+export const markUnResolved = async (id, token) => {
   const body = { id };
   try {
-    const result = await api.patch("/enquiries/markedasunresolved", body);
-    console.log(result.data);
+    const result = await api.patch("/enquiries/markedasunresolved", body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (result && result.data) {
       return result;
@@ -49,10 +62,18 @@ export const markUnResolved = async (id) => {
   }
 };
 
-export const getResolved = () => {
+export const getResolved = (token) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const result = await api.post("/enquiries/getresolvedenquiry");
+      const result = await api.post(
+        "/enquiries/getresolvedenquiry",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (result && result.data) {
         resolve(result.data);
       }
@@ -63,10 +84,18 @@ export const getResolved = () => {
   });
 };
 
-export const getUnResolved = () => {
+export const getUnResolved = (token) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const result = await api.post("/enquiries/getunresolvedenquiry");
+      const result = await api.post(
+        "/enquiries/getunresolvedenquiry",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (result && result.data) {
         resolve(result.data);
       }
