@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Input from "./Input";
-import saveUniversity from "../API_CALLS/saveUniversityDetail";
+import { saveUniversity } from "../API_CALLS/saveUniversityDetail";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 

@@ -10,8 +10,6 @@ export default function EnrolledStudents() {
   const { userData } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const BACKEND_URL = "http://localhost:3000"; // Your backend URL
-
   useEffect(() => {
     api
       .get("/enquiries/getstudentdetails", {
@@ -25,12 +23,12 @@ export default function EnrolledStudents() {
       })
       .catch((err) => {
         console.log(err.response.status);
-        // if (err.response && err.response.status === 400) {
-        //   alert("Please log in.");
-        //   navigate("/signin");
-        // } else {
-        //   console.error(err);
-        // }
+        if (err.response && err.response.status === 400) {
+          alert("Please log in.");
+          navigate("/signin");
+        } else {
+          console.error(err);
+        }
       });
   }, [userData.token, navigate]); // Add dependencies
 
@@ -92,12 +90,10 @@ export default function EnrolledStudents() {
                 <td className="p-3">
                   {std.image ? (
                     <img
-                      src={`${BACKEND_URL}/${std.image}`}
+                      src={std.image}
                       alt={std.name}
                       className="w-16 h-16 object-cover rounded cursor-pointer"
-                      onClick={() =>
-                        setSelectedImage(`${BACKEND_URL}/${std.image}`)
-                      }
+                      onClick={() => setSelectedImage(std.image)}
                     />
                   ) : (
                     <span>No Image</span>

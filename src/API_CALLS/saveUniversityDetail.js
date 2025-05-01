@@ -1,6 +1,6 @@
 import api from "./api";
 
-export default function saveUniversity(body, token) {
+export function saveUniversity(body, token) {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await api.post("/college/adduniversity", body, {
@@ -17,4 +17,20 @@ export default function saveUniversity(body, token) {
       reject(err);
     }
   });
+}
+export async function deleteUniversity(_id, token) {
+  console.log(token);
+  try {
+    const response = await api.delete("/college/deleteuniversity", {
+      data: { college_id: _id },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }

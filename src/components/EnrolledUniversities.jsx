@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import api from "./../API_CALLS/api";
-
+import { deleteUniversity } from "../API_CALLS/saveUniversityDetail";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+
+import { MdDelete, MdEdit } from "react-icons/md";
 export default function EnrolledUniversities() {
   const [isLoaded, setLoaded] = useState(false);
   const [universities, setUniversities] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const { userData } = useContext(AuthContext);
 
-  useEffect(() => {
+  async function getCollege(params) {
     api
       .get("/college/", {
         headers: {
@@ -23,6 +25,24 @@ export default function EnrolledUniversities() {
       .catch((err) => {
         console.error(err);
       });
+  }
+
+  function handleDelete(_id) {
+    deleteUniversity(_id, userData.token)
+      .then((data) => {
+        if (data.msg === "Deleted Successfully") {
+          getCollege();
+        } else {
+          alert(data.msg);
+        }
+      })
+      .catch((err) => {
+        alert(JSON.stringify(err));
+      });
+  }
+
+  useEffect(() => {
+    getCollege();
   }, []);
 
   if (!isLoaded) {
@@ -87,12 +107,10 @@ export default function EnrolledUniversities() {
                 <td className="p-2">
                   {uni.university_img ? (
                     <img
-                      src={`http://${uni.university_img}`}
+                      src={uni.university_img}
                       alt={uni.university_name}
                       className="w-16 h-16 object-cover rounded cursor-pointer"
-                      onClick={() =>
-                        setSelectedImage(`http://${uni.university_img}`)
-                      }
+                      onClick={() => setSelectedImage(uni.university_img)}
                     />
                   ) : (
                     <span>No Image</span>
@@ -100,10 +118,15 @@ export default function EnrolledUniversities() {
                 </td>
                 <td className="p-2 flex gap-2">
                   <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                    Edit
+                    <MdEdit size={30} />
                   </button>
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
-                    Delete
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                    onClick={() => {
+                      handleDelete(uni._id);
+                    }}
+                  >
+                    <MdDelete size={30} />
                   </button>
                 </td>
               </tr>

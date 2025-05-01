@@ -15,18 +15,18 @@ export default function TopColleges() {
     course: "",
   });
 
-  const handleSubmit = (college) => {
-    submitEnquiry(college, enquiryState)
-      .then((data) => {
-        if (data.msg === "ok") {
-          alert("Enquiry Submitted Successfully");
-        } else {
-          alert("Some internal error occured try later");
-        }
-      })
-      .catch((err) => {
-        alert("Unable to submit Enquiry please try later");
-      });
+  const handleSubmit = async (college, close) => {
+    try {
+      const data = await submitEnquiry(college, enquiryState);
+      if (data.msg === "ok") {
+        alert("Enquiry submitted successfully");
+        close();
+      } else {
+        alert("Some internal error occurred. Please try again later.");
+      }
+    } catch (err) {
+      alert("Unable to submit enquiry. Please try again later.");
+    }
   };
 
   const handleChange = (e) => {
@@ -40,7 +40,6 @@ export default function TopColleges() {
     getTopColleges()
       .then((data) => {
         setCollegeList(data.college);
-
         setLoaded(true);
       })
       .catch((err) => {
@@ -71,7 +70,7 @@ export default function TopColleges() {
     <div className="p-1 mt-10 sm:p-4 sm:m-4">
       <h2 className="text-2xl font-bold mb-4 text-center">Top Colleges</h2>
 
-      <div className="overflow-x-auto border border-roun">
+      <div className="overflow-x-auto border">
         <table className="min-w-full bg-white border border-gray-800 shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
@@ -108,7 +107,7 @@ export default function TopColleges() {
                   {college.nirf_rank}
                 </td>
                 <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
-                  {college.courses_offered}
+                  {college.courses_offered.join(", ")}
                 </td>
                 <td className="px-1 py-1 sm:px-6 sm:py-3 border border-gray-800 text-xs sm:text-xl">
                   {college.fee_range}
@@ -137,7 +136,7 @@ export default function TopColleges() {
                           NIRF Rank: {college.nirf_rank}
                         </p>
                         <p className="text-gray-700 mb-2">
-                          Courses Offered: {college.courses_offered}
+                          Courses Offered: {college.courses_offered.join(", ")}
                         </p>
                         <p className="text-gray-700 mb-4">
                           Fee Range: {college.fee_range}
@@ -165,13 +164,21 @@ export default function TopColleges() {
                           onChange={handleChange}
                         />
 
-                        <input
-                          placeholder="Course."
-                          className="w-full border border-gray-300 p-2 rounded mb-4"
-                          type="text"
+                        <select
+                          className="p-2 w-full border border-gray-300 mb-4"
+                          defaultValue=""
                           name="course"
                           onChange={handleChange}
-                        />
+                        >
+                          <option disabled value="">
+                            Select Course
+                          </option>
+                          {college.courses_offered.map((course, i) => (
+                            <option key={i} value={course}>
+                              {course}
+                            </option>
+                          ))}
+                        </select>
 
                         <div className="flex justify-between">
                           <button
@@ -182,9 +189,7 @@ export default function TopColleges() {
                           </button>
 
                           <button
-                            onClick={() => {
-                              handleSubmit(college);
-                            }}
+                            onClick={() => handleSubmit(college, close)}
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
                           >
                             Submit
