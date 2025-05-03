@@ -1,6 +1,10 @@
 import banner from "../assets/slider-banner.webp";
 import glBajaj from "../assets/GLBajaj.jpeg";
 import Card from "./../components/Card";
+import councelling from "./../assets/Career_Counselling.png";
+import admission from "./../assets/Admission_in_Top_Colleges_in_India.png";
+import exper_councellin from "./../assets/Get_Expert_Career_Guidance.png";
+import Slider from "../components/Slider";
 
 export default function Home() {
   const collegeData = [
@@ -35,10 +39,11 @@ export default function Home() {
       collegeAddress: "Greater Noida, Uttar Pradesh",
     },
   ];
+
   return (
-    <div className=" bg-gradient-to-br from-purple-500 to-pink-500 flex flex-col justify-center items-center py-5 m-auto">
+    <div className="  flex flex-col justify-center items-center py-5 m-auto">
       <div>
-        <img src={banner} alt="Banner" />
+        <img src={banner} alt="Banner" className=" w-[100vw]" />
       </div>
 
       <div id="discription" className="mt-4">
@@ -58,16 +63,51 @@ export default function Home() {
       </div>
 
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {collegeData.map((data) => {
-          return (
-            <Card
-              key={data.collegeName}
-              image={data.image}
-              collegeName={data.collegeName}
-              collegeAddress={data.collegeAddress}
-            />
-          );
-        })}
+        {collegeData.map((data, index) => (
+          <Card
+            key={index}
+            image={data.image}
+            message={data.collegeName}
+            extraInfo={data.collegeAddress}
+          />
+        ))}
+      </div>
+
+      <div className="bg-violet-400 p-10 justify-center">
+        <div>
+          <div>
+            <h2 className="text-3xl text-center font-bold">
+              Our Career Assessment is an Industry Benchmark Our groundwork
+              takes you sky high
+            </h2>
+          </div>
+          <div>
+            <p className="text-center text-xl fonst semi-bold">
+              AdmissionLelo is one of the pioneers in online career counselling.
+              Our expert team of counsellors are highly qualified, experienced
+              and well-versed in giving sound advice to aspiring students. They
+              impart career counselling to thousands of students every year with
+              impeccable results.
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <Card key={1} image={councelling} message="Free Career Councelling" />
+          <Card
+            key={2}
+            image={admission}
+            message="Only Free Colleges For You"
+          />
+          <Card
+            key={3}
+            image={exper_councellin}
+            message="Best Career Guidance from Experts"
+          />
+        </div>
+      </div>
+
+      <div>
+        <Slider />
       </div>
     </div>
   );
