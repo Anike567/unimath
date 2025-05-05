@@ -14,6 +14,7 @@ export default function StudentForm() {
     university: "",
     doj: "",
     doc: "",
+    enrollment_number: "",
     image: null,
   });
   const [hasError, setError] = useState(false);
@@ -47,6 +48,7 @@ export default function StudentForm() {
     form.append("doc", formData.doc);
     form.append("file", formData.image);
     form.append("university", formData.university);
+    form.append("enrollment_no", formData.enrollment_number);
 
     saveStudentDetails(form, userData.token)
       .then((data) => {
@@ -86,7 +88,13 @@ export default function StudentForm() {
               handler={handleChange}
               value={formData.name}
             />
-
+            <Input
+              title="Enrollment No."
+              name="enrollment_number"
+              id="enrollment_number"
+              handler={handleChange}
+              value={formData.enrollment_number}
+            />
             <Input
               title="Email"
               name="email"

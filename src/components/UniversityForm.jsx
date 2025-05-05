@@ -10,6 +10,7 @@ export default function CollegeForm() {
     nirf_rank: "",
     courses_offered: "",
     fee_range: "",
+    description: "",
     image: null,
   });
   const [hasError, setError] = useState(false);
@@ -37,6 +38,7 @@ export default function CollegeForm() {
     form.append("nirf_rank", formData.nirf_rank);
     form.append("courses_offered", formData.courses_offered);
     form.append("fee_range", formData.fee_range);
+    form.append("description", formData.description);
     form.append("file", formData.image);
 
     saveUniversity(form, userData.token)
@@ -88,6 +90,14 @@ export default function CollegeForm() {
               title="Courses Offered (separated with ,)"
               name="courses_offered"
               id="courses_offered"
+              handler={handleChange}
+              value={formData.courses_offered}
+            />
+
+            <Input
+              title="Description"
+              name="description"
+              id="description"
               handler={handleChange}
               value={formData.courses_offered}
             />
