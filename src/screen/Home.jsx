@@ -6,11 +6,16 @@ import DemoCarousel from "./../components/Courosel";
 import HoverCard from "../components/HoverCard";
 import { useEffect, useState } from "react";
 import getTopColleges from "../API_CALLS/getTopColleges";
+import Button from "./../components/StyledButton";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [collegeData, setCollegeData] = useState([]);
   const [isLoaded, setLoaded] = useState(false);
   const [hasError, setError] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getTopColleges()
@@ -49,19 +54,30 @@ export default function Home() {
 
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {collegeData.map((data, index) => (
-          <HoverCard
-            key={index}
-            image={data.university_img}
-            message={data.university_name}
-            extraInfo={data.description}
-          />
+          <Link to="/college-details">
+            <HoverCard
+              key={index}
+              image={data.university_img}
+              message={data.university_name}
+              extraInfo={data.description}
+            />
+          </Link>
         ))}
       </div>
 
+      <div
+        className="text-center mt-10"
+        onClick={() => {
+          navigate("/topcolleges");
+        }}
+      >
+        <Button text="Browse More" />
+      </div>
+
       <div id="discription" className="mt-4">
-        <div className="text-center">
+        <div className="text-center ">
           <h3 className="text-3xl font-bold mb-2">
-            Get Admission in the Colleges in India
+            Get Admission in the Top Colleges of India
           </h3>
         </div>
         <div className="p-2 max-w-[70vw] mx-auto text-center">
@@ -74,7 +90,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="bg-violet-400 p-20 justify-center ">
+      <div className="bg-[#99E1D9] p-20 justify-center ">
         <div>
           <div>
             <h2 className="text-3xl text-center font-bold">

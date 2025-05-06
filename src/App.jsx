@@ -16,6 +16,7 @@ import StudentForm from "./components/StudentForm.jsx";
 import UniversityForm from "./components/UniversityForm.jsx";
 import EnrolledStudents from "./components/EnrolledStudents.jsx";
 import EnrolledUniversities from "./components/EnrolledUniversities.jsx";
+import CollegeDetails from "./screen/CollegeDetails.jsx";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="topcolleges" element={<TopColleges />} />
+          <Route path="college-details" element={<CollegeDetails />} />
         </Route>
 
         {/* Auth Routes - Admin Only */}
