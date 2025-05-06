@@ -1,7 +1,7 @@
 export default function HoverCard(props) {
   return (
-    <div className="w-full max-w-sm bg-white shadow-lg rounded-xl p-4 flex flex-col group relative overflow-hidden">
-      <div className="w-full h-48 overflow-hidden rounded-md relative">
+    <div className="w-sm max-w-sm lg:w-[600px] lg:max-w-[600px] bg-white shadow-lg rounded-xl p-4 flex flex-col group relative overflow-hidden">
+      <div className="w-full h-[400px] overflow-hidden rounded-md relative">
         <img
           src={props.image}
           alt="college"

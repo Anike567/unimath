@@ -21,7 +21,6 @@ export default function Home() {
     getTopColleges()
       .then((data) => {
         const topColleges = data.college.slice(0, 6);
-        console.log(topColleges);
         setCollegeData(topColleges);
         setLoaded(true);
       })
@@ -54,9 +53,8 @@ export default function Home() {
 
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {collegeData.map((data, index) => (
-          <Link to="/college-details">
+          <Link to={`/college-details?_id=${data._id}`} key={index}>
             <HoverCard
-              key={index}
               image={data.university_img}
               message={data.university_name}
               extraInfo={data.description}

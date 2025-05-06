@@ -1,20 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import getTopColleges from "../API_CALLS/getTopColleges";
 import "reactjs-popup/dist/index.css";
 import HoverCard from "../components/HoverCard";
 import { FaSearch } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function TopColleges() {
   const [collegeList, setCollegeList] = useState([]);
   const [isLoaded, setLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [searchList, setSearchList] = useState([]);
+  const [displaySearchList, setDisplaySearchList] = useState(false);
+  const searchRef = useRef();
 
-  const search = () => {
-    const found = collegeList.find(
-      (uni) => uni.university_name.toLowerCase() === searchText.toLowerCase()
+  const search = (text) => {
+    if (!text.trim()) {
+      setSearchList([]);
+      setDisplaySearchList(false);
+      return;
+    }
+
+    const foundList = collegeList.filter((uni) =>
+      uni.university_name.toLowerCase().includes(text.toLowerCase())
     );
-    return found ? "University Found" : "University Not Found";
+    setSearchList(foundList);
+    setDisplaySearchList(true);
   };
 
   useEffect(() => {
@@ -27,6 +38,16 @@ export default function TopColleges() {
         setHasError(true);
         console.log(err);
       });
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setDisplaySearchList(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   if (hasError) {
@@ -48,39 +69,56 @@ export default function TopColleges() {
   }
 
   return (
-    <div className="  py-12 bg-white flex justify-center items-center flex-col">
-      <h2 className="text-3xl  sm:text-4xl font-bold text-center text-blue-700 mb-8">
+    <div className="py-12 bg-white flex justify-center items-center flex-col">
+      <h2 className="text-3xl sm:text-4xl font-bold text-center text-blue-700 mb-8">
         Top Colleges in India
       </h2>
-      <div>
-        <div className="relative mb-10 w-[30vw]">
-          <input
-            className="px-4 py-2 pl-10 w-full border rounded-md"
-            placeholder="Search for university by name"
-            value={searchText}
-            onChange={(e) => {
-              setSearchText(e.target.value);
-              console.log(searchText);
-            }}
-            onClick={(e) => {
-              if (e.target.key === "enter") {
-                console.log(search(searchText));
-              }
-            }}
-          />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-        </div>
+
+      {/* Search Box and Dropdown */}
+      <div className="relative mb-10 w-[30vw]" ref={searchRef}>
+        <input
+          className="px-4 py-2 pl-10 w-full border rounded-md"
+          placeholder="Search for university by name"
+          value={searchText}
+          onChange={(e) => {
+            const value = e.target.value;
+            setSearchText(value);
+            search(value);
+          }}
+        />
+        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+
+        {displaySearchList && searchList.length > 0 && (
+          <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md max-h-60 overflow-y-auto shadow-md">
+            {searchList.map((uni, index) => (
+              <Link to={`/college-details?_id=${uni._id} `}>
+                <li
+                  key={index}
+                  className="px-4 py-2 hover:bg-blue-100 cursor-pointer text-lg text-bold"
+                  onClick={() => {
+                    setSearchText(uni.university_name);
+                    setDisplaySearchList(false);
+                  }}
+                >
+                  {uni.university_name}
+                </li>
+              </Link>
+            ))}
+          </ul>
+        )}
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {collegeList.map((data, index) => (
-          <div className="cursor-pinter" key={index}>
-            <HoverCard
-              key={index}
-              image={data.university_img}
-              message={data.university_name}
-              extraInfo={data.description}
-            />
-          </div>
+          <Link to={`/college-details?_id=${data._id} `} key={index}>
+            <div className="cursor-pointer" key={index}>
+              <HoverCard
+                image={data.university_img}
+                message={data.university_name}
+                extraInfo={data.description}
+              />
+            </div>
+          </Link>
         ))}
       </div>
     </div>
