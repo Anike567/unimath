@@ -1,49 +1,61 @@
-import banner from "../assets/slider-banner.webp";
-import glBajaj from "../assets/GLBajaj.jpeg";
-import Card from "./../components/Card";
+import Card from "../components/Card";
 import councelling from "./../assets/Career_Counselling.png";
 import admission from "./../assets/Admission_in_Top_Colleges_in_India.png";
 import exper_councellin from "./../assets/Get_Expert_Career_Guidance.png";
-import Slider from "../components/Slider";
+import DemoCarousel from "./../components/Courosel";
+import HoverCard from "../components/HoverCard";
+import { useEffect, useState } from "react";
+import getTopColleges from "../API_CALLS/getTopColleges";
 
 export default function Home() {
-  const collegeData = [
-    {
-      image: glBajaj,
-      collegeName: "GL Bajaj Institute of Technology",
-      collegeAddress: "Greater Noida, Uttar Pradesh",
-    },
-    {
-      image: glBajaj,
-      collegeName: "GL Bajaj Institute of Technology",
-      collegeAddress: "Greater Noida, Uttar Pradesh",
-    },
-    {
-      image: glBajaj,
-      collegeName: "GL Bajaj Institute of Technology",
-      collegeAddress: "Greater Noida, Uttar Pradesh",
-    },
-    {
-      image: glBajaj,
-      collegeName: "GL Bajaj Institute of Technology",
-      collegeAddress: "Greater Noida, Uttar Pradesh",
-    },
-    {
-      image: glBajaj,
-      collegeName: "GL Bajaj Institute of Technology",
-      collegeAddress: "Greater Noida, Uttar Pradesh",
-    },
-    {
-      image: glBajaj,
-      collegeName: "GL Bajaj Institute of Technology",
-      collegeAddress: "Greater Noida, Uttar Pradesh",
-    },
-  ];
+  const [collegeData, setCollegeData] = useState([]);
+  const [isLoaded, setLoaded] = useState(false);
+  const [hasError, setError] = useState(false);
+
+  useEffect(() => {
+    getTopColleges()
+      .then((data) => {
+        const topColleges = data.college.slice(0, 6);
+        console.log(topColleges);
+        setCollegeData(topColleges);
+        setLoaded(true);
+      })
+
+      .catch((err) => {
+        console.log(err);
+        setError(true);
+      });
+  }, []);
+
+  if (hasError) {
+    <div className="flex justify-center items-center h-screen">
+      <p className="text-3xl, text-red-500">
+        Error occured please try again later
+      </p>
+    </div>;
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-8 h-8 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="  flex flex-col justify-center items-center py-5 m-auto">
-      <div>
-        <img src={banner} alt="Banner" className=" w-[100vw]" />
+      <DemoCarousel />
+
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {collegeData.map((data, index) => (
+          <HoverCard
+            key={index}
+            image={data.university_img}
+            message={data.university_name}
+            extraInfo={data.description}
+          />
+        ))}
       </div>
 
       <div id="discription" className="mt-4">
@@ -52,7 +64,7 @@ export default function Home() {
             Get Admission in the Colleges in India
           </h3>
         </div>
-        <div className="text-center p-2">
+        <div className="p-2 max-w-[70vw] mx-auto text-center">
           <p className="text-2xl">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
             ipsa nesciunt vero dicta rerum eaque, minima omnis aut
@@ -62,18 +74,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {collegeData.map((data, index) => (
-          <Card
-            key={index}
-            image={data.image}
-            message={data.collegeName}
-            extraInfo={data.collegeAddress}
-          />
-        ))}
-      </div>
-
-      <div className="bg-violet-400 p-10 justify-center">
+      <div className="bg-violet-400 p-20 justify-center ">
         <div>
           <div>
             <h2 className="text-3xl text-center font-bold">
@@ -82,7 +83,7 @@ export default function Home() {
             </h2>
           </div>
           <div>
-            <p className="text-center text-xl fonst semi-bold">
+            <p className="text-center text-xl fonst semi-bold ">
               AdmissionLelo is one of the pioneers in online career counselling.
               Our expert team of counsellors are highly qualified, experienced
               and well-versed in giving sound advice to aspiring students. They
@@ -96,7 +97,7 @@ export default function Home() {
           <Card
             key={2}
             image={admission}
-            message="Only Free Colleges For You"
+            message="Only Best Colleges For You"
           />
           <Card
             key={3}
@@ -104,10 +105,6 @@ export default function Home() {
             message="Best Career Guidance from Experts"
           />
         </div>
-      </div>
-
-      <div>
-        <Slider />
       </div>
     </div>
   );

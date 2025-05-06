@@ -102,7 +102,7 @@ export default function EnrolledUniversities() {
               <tr key={index} className="border-t">
                 <td className="p-2">{uni.university_name}</td>
                 <td className="p-2">{uni.nirf_rank}</td>
-                <td className="p-2">{uni.courses_offered}</td>
+                <td className="p-2">{uni.courses_offered.join(", ")}</td>
                 <td className="p-2">{uni.fee_range}</td>
                 <td className="p-2">
                   {uni.university_img ? (
