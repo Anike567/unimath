@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import getTopColleges from "../API_CALLS/getTopColleges";
-import Card from "../components/Card";
+import brochure from "./../assets/brochure.jpg";
 
 const CollegeDetails = () => {
   const [hasError, setHasError] = useState(false);
@@ -12,18 +12,17 @@ const CollegeDetails = () => {
   const collegeId = queryParams.get("_id");
 
   useEffect(() => {
-    {
-      getTopColleges()
-        .then((data) => {
-          const result = data.college.filter((uni) => uni._id === collegeId);
-          setCollege(result);
-          setLoaded(true);
-        })
-        .catch((error) => {
-          setHasError(true);
-        });
-    }
-  }, []);
+    getTopColleges()
+      .then((data) => {
+        const result = data.college.filter((uni) => uni._id === collegeId);
+        setCollege(result);
+        setLoaded(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setHasError(true);
+      });
+  }, [collegeId]);
 
   if (!isLoaded) {
     return (
@@ -42,28 +41,46 @@ const CollegeDetails = () => {
       </div>
     );
   }
+
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div className="grid grid-cols2">
+    <div className="flex content-center mt-20">
+      <div className="grid grid-cols-2 gap-4 m-auto">
         <div>
-          {college.map((uni, index) => (
-            <div key={index}>
-              <Card
-                image={uni.university_img}
-                message={uni.university_name}
-                extraInfo={uni.description}
-              />
-            </div>
-          ))}
+          {college && college.length > 0 ? (
+            college.map((uni, index) => (
+              <div key={index}>
+                <div className="w-full max-w-2xl h-full max-h-2xl bg-white shadow-lg rounded-xl p-4 flex flex-col space-y-2">
+                  <div className="w-full h-full overflow-hidden rounded-md">
+                    <img
+                      src={uni.university_img}
+                      alt="college"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <div>
+                    <h1 className="text-lg font-semibold text-center">
+                      {uni.university_name}
+                    </h1>
+
+                    <p className="text-sm text-gray-600 text-center">
+                      {uni.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No college found.</p>
+          )}
         </div>
-        <div></div>
+        <div className="w-full h-full shadow-lg">
+          <img
+            className="w-full h-full object-cover"
+            src={brochure}
+            alt="college brochure"
+          />
+        </div>
       </div>
     </div>
   );
