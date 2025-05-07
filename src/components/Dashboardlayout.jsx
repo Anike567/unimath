@@ -2,10 +2,12 @@ import { NavLink, Outlet } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FiFileText, FiSettings } from "react-icons/fi";
 import { FaEye, FaPlus } from "react-icons/fa";
-
-<FaPlus />;
-
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 export default function DashboardLayout() {
+  const { setUserData } = useContext(AuthContext);
+  const navigate = useNavigate();
   return (
     <div className="h-screen w-screen flex bg-gray-100">
       {/* Sidebar */}
@@ -86,7 +88,19 @@ export default function DashboardLayout() {
         </div>
 
         <div>
-          <button className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition">
+          <button
+            className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition"
+            onClick={() => {
+              setUserData({
+                isLoggedIn: false,
+                token: "",
+                name: "",
+                email: "",
+              });
+
+              navigate("/admin");
+            }}
+          >
             Logout
           </button>
         </div>

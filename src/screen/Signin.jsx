@@ -40,7 +40,7 @@ export default function Signin() {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex justify-center items-center">
+    <div className="h-screen  flex justify-center items-center">
       <div className="w-full max-w-xs">
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           {/* Email input */}
