@@ -81,6 +81,21 @@ const CollegeDetails = () => {
             alt="college brochure"
           />
         </div>
+        <div className="w-full h-full shadow-lg">
+          <img
+            className="w-full h-full object-cover"
+            src={brochure}
+            alt="college brochure"
+          />
+        </div>
+
+        <div className="w-full h-full shadow-lg">
+          <img
+            className="w-full h-full object-cover"
+            src={brochure}
+            alt="college brochure"
+          />
+        </div>
       </div>
     </div>
   );
