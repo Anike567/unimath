@@ -1,9 +1,10 @@
+import axios from "axios";
 import api from "./api";
 
 export function saveStudentDetails(body, token) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await api.post("/enquiries/addstudents", body, {
+      const response = await axios.post("/enquiries/addstudents", body, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

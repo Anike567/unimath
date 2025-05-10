@@ -3,12 +3,14 @@ import api from "./../API_CALLS/api";
 import { deleteUniversity } from "../API_CALLS/saveUniversityDetail";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+import EditUni from "./EditUni";
 
 import { MdDelete, MdEdit } from "react-icons/md";
 export default function EnrolledUniversities() {
   const [isLoaded, setLoaded] = useState(false);
   const [universities, setUniversities] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedUni, setSelectedUni] = useState(null);
   const { userData } = useContext(AuthContext);
 
   async function getCollege(params) {
@@ -55,6 +57,18 @@ export default function EnrolledUniversities() {
 
   return (
     <div>
+      {selectedUni && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
+          onClick={() => setSelectedImage(null)}
+        >
+          <EditUni
+            selectedUni={selectedUni}
+            onClose={() => setSelectedUni(null)}
+            onUpdate={getCollege}
+          />
+        </div>
+      )}
       {/* Modal for viewing full image */}
       {selectedImage && (
         <div
@@ -117,7 +131,12 @@ export default function EnrolledUniversities() {
                   )}
                 </td>
                 <td className="p-2 flex gap-2">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                  <button
+                    onClick={() => {
+                      setSelectedUni(uni);
+                    }}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                  >
                     <MdEdit size={30} />
                   </button>
                   <button
