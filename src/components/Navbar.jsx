@@ -59,13 +59,13 @@ export default function Navbar() {
           >
             Top Colleges
           </Link>
-          <Link
+          {/* <Link
             to="/signup"
             className="text-blue-400 hover:underline"
             onClick={toggleMenu}
           >
             Top Cources
-          </Link>
+          </Link> */}
           <Link
             to="/about"
             className="text-blue-400 hover:underline"
