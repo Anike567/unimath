@@ -6,7 +6,14 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    host: "10.182.10.93",
+    proxy: {
+      "/api": {
+        target: "https://collegesearchbackend-production.up.railway.app",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+    host: "192.168.1.11",
     port: 5173,
   },
 });
