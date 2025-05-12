@@ -75,7 +75,7 @@ export default function TopColleges() {
       </h2>
 
       {/* Search Box and Dropdown */}
-      <div className="relative mb-10 w-[30vw]" ref={searchRef}>
+      <div className="relative mb-10 w-[70vw] lg:w-[30vw]" ref={searchRef}>
         <input
           className="px-4 py-2 pl-10 w-full border rounded-md"
           placeholder="Search for university by name"
